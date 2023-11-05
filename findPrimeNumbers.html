@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xml:lang>
+  <head>
+    <title>Find Prime Numbers</title>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+        padding: 4px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 style="color: Black">Program to find Prime Numbers</h1>
+
+    <p>Please provide a range of numbers to find prime numbers</p>
+    <form required onsubmit="displayCalculatedInfo(event)">
+      <div style="display: flex; justify-content: space-between; width: 450px; height: 40px">
+        <input
+          id="startNumber"
+          type="number"
+          min="0"
+          placeholder="Enter starting number of range"
+          required
+          style="width: 200px"
+        />
+        <input
+          id="endNumber"
+          type="number"
+          min="0"
+          max="10000"
+          placeholder="Enter end number of range"
+          required
+          style="width: 200px"
+        />
+      </div>
+
+      <input type="submit" value="Find Prime Numbers" style="margin-top: 10px" />
+    </form>
+
+    <button style="margin-top: 10px" onclick="displayTabs()">Details</button>
+
+    <p id="loader"></p>
+
+    <p id="TotalTimeTaken"></p>
+
+    <div id="displayInfo"></div>
+  </body>
+
+  <script type="text/javascript">
+    function isPrime(n) {
+      if (n == 1) {
+        console.log("in 1", n);
+        return false;
+      } else {
+        for (let i = 2; i <= Math.sqrt(n); i++) {
+          if (n % i === 0) {
+            return false;
+          }
+        }
+
+        return true;
+      }
+    }
+
+    function findPrimeNumbersInRange(start, end) {
+      if (end === 0) {
+        return false;
+      }
+      let timeArray = [];
+      let startTime = performance.now();
+      for (let i = start; i <= end; i++) {
+        let startTimeForNumber = performance.now();
+        let flag = isPrime(i);
+        let endTimeForNumber = performance.now();
+
+        if (flag) {
+          console.log(i);
+          timeArray.push({ no: i, result: "Prime", time: endTimeForNumber - startTimeForNumber });
+        } else {
+          timeArray.push({ no: i, result: "Normal", time: endTimeForNumber - startTimeForNumber });
+        }
+      }
+
+      let endTime = performance.now();
+      let timeTaken = endTime - startTime;
+
+      console.log(timeTaken);
+      console.log(timeArray);
+
+      return { timeTaken, timeArray };
+    }
+
+    function displayCalculatedInfo(event) {
+      event.preventDefault();
+
+      let start = document.getElementById("startNumber").value;
+      let end = document.getElementById("endNumber").value;
+
+      let getPrimeNumbers = findPrimeNumbersInRange(start, end);
+
+      console.log(getPrimeNumbers);
+
+      document.getElementById(
+        "TotalTimeTaken"
+      ).innerHTML = `Time taken to run all instances of the function: ${getPrimeNumbers.timeTaken} ms.`;
+
+      let table = `<table> <tr><th>Number</th><th>Result</th><th>Time in ms</th></tr>`;
+
+      getPrimeNumbers.timeArray.forEach((ele, index) => {
+        table += "<tr>";
+        table += `<td>${ele.no}</td>`;
+        table += `<td>${ele.result}</td>`;
+        table += `<td>${ele.time}</td>`;
+        table += "</tr>";
+      });
+      table += "</table>";
+
+      document.getElementById("displayInfo").innerHTML = table;
+    }
+
+    function displayTabs() {
+      let firstRangeResult = findPrimeNumbersInRange(19, 21);
+      let secondRangeResult = findPrimeNumbersInRange(7, 12);
+
+      let html1 = `<head><title>Find Prime Numbers</title>
+        <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+        padding: 4px;
+      }
+    </style>
+  </head>
+  <table> <tr><th>Number</th><th>Result</th><th>Time in ms</th></tr>`;
+
+      firstRangeResult.timeArray.forEach((ele, index) => {
+        html1 += "<tr>";
+        html1 += `<td>${ele.no}</td>`;
+        html1 += `<td>${ele.result}</td>`;
+        html1 += `<td>${ele.time}</td>`;
+        html1 += "</tr>";
+      });
+      html1 += "</table>";
+
+      let tab1 = window.open("about:blank", "_blank");
+      tab1.document.write(html1);
+      tab1.document.close();
+
+      let html2 = `<head><title>Find Prime Numbers</title>
+        <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+        padding: 4px;
+      }
+    </style>
+  </head>
+  <table> <tr><th>Number</th><th>Time in ms</th></tr>`;
+
+      secondRangeResult.timeArray.forEach((ele, index) => {
+        if (ele.result === "Prime") {
+          html2 += "<tr>";
+          html2 += `<td>${ele.no}</td>`;
+          html2 += `<td>${ele.time}</td>`;
+          html2 += "</tr>";
+        }
+      });
+      html2 += "</table>";
+
+      let tab2 = window.open("about:blank", "_blank");
+      tab2.document.write(html2);
+      tab2.document.close();
+    }
+  </script>
+</html>
